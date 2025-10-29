@@ -4,9 +4,7 @@
 
 <!-- Brief description of what your project does -->
 
-
 ## Getting Started
-
 
 ### Development Setup
 
@@ -24,14 +22,13 @@ cd [REPOSITORY_NAME]
 
 <!-- Describe your project structure here -->
 
-```
+```text
 .
 ├── .github/
 │   ├── workflows/       # GitHub Actions workflows
 │   └── dependabot.yml   # Dependabot configuration
 └── etc
 ```
-
 
 ## Contributing
 
@@ -40,6 +37,10 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## Security
 
 For information on reporting security vulnerabilities, please see [SECURITY.md](SECURITY.md).
+
+## Repo Tooling
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on repo tooling and development environment setup.
 
 ## License
 
@@ -50,6 +51,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 <!-- Add support information here -->
 
 For questions or issues, please:
+
 - Open an issue on GitHub
 - Check existing documentation
 - Contact the maintainers
