@@ -3,9 +3,9 @@
 # Your working directory should be the root of the git repository
 
 # Project specific code goes in
-#  project/build_package.sh (compile)
-#  project/install_deps.sh (install dependencies necessary to compile the project)
-#  project/test/test_execute.bats (test code to install and validate the produced package installed from artifactory)
+#  project-example/build_package.sh (compile)
+#  project-example/install_deps.sh (install dependencies necessary to compile the project-example)
+#  project-example/test/test_execute.bats (test code to install and validate the produced package installed from artifactory)
 
 
 

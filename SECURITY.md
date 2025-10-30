@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-<!-- Update this section with the versions of your project that are currently supported with security updates -->
+<!-- Update this section with the versions of your project-example that are currently supported with security updates -->
 
 | Version | Supported          |
 | ------- | ------------------ |

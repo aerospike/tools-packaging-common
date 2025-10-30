@@ -8,7 +8,7 @@ This repository contains common scripts and files for packaging Aerospike Tools
 This repo contains shared packaging files. It should be added as a submodule of you project at [.github/packaging/common](.github/packaging/common) directory.
 These scripts are used to build docker images for each supported OS distribution. 
 
-Scripts in [.github/packaging/common](.github/packaging/project) should be implemented by each project. 
+Scripts in [.github/packaging/common](project-example) should be implemented by each project. 
 These include
  - test/test_execute.bats
    - Test cases that install the package from JFrog and make sure the associated executables are available and execute. 
@@ -27,22 +27,33 @@ You must have
 
 ```bash
 # Clone the repository
-git clone https://github.com/aerospike/[REPOSITORY_NAME].git
-cd [REPOSITORY_NAME]
 
-# Add your setup steps here
+cd (your repository)
+mkdir -p .github/packaging/project
+git submodule add https://github.com/aerospike/packaging-common.git .github/packaging/common
+cp -a .github/packaging/common/project-example/* .github/packaging/project/
+# edit .github/packaging/project/* to match your project
+mkdir pkg
+cp .github/packaging/common/pkg-example/Makefile pkg/
+# edit pkg/Makefile to match your project
+
+
+
 ```
 
 ## Project Structure
 
-<!-- Describe your project structure here -->
+<!-- Describe your project-example structure here -->
 
 ```
+This repository should be setup in your project as follows:
 .
 ├── .github/
-│   ├── workflows/       # GitHub Actions workflows
-│   └── dependabot.yml   # Dependabot configuration
-└── etc
+│   ├── packaging/common                    # Submodule of this directory
+│   ├── packaging/project                   # copy of ./project-example
+│   ├── workflows/build-artifacts.yaml      # copy of ./build-artifacts-example.yml configured for your project name
+│   └── dependabot.yml                      # Dependabot configuration
+└── pkg/Makefile                            # Makefile for building the package
 ```
 
 

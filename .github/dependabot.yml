@@ -9,7 +9,7 @@ updates:
       - "dependencies"
       - "github-actions"
 
-  # Add additional package ecosystems as needed for your project
+  # Add additional package ecosystems as needed for your project-example
   # Python dependencies (uncomment if using Python)
   # - package-ecosystem: "pip"
   #   directory: "/"
