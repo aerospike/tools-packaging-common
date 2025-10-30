@@ -1,16 +1,29 @@
-# [PROJECT_NAME]
+# Server Packaging Common
 
-> **Note:** This is a template repository. When creating a new repository from this template, replace `[PROJECT_NAME]` with your project name and update this README with your project-specific information.
 
-<!-- Brief description of what your project does -->
-
+This repository contains common scripts and files for packaging Aerospike Tools
 
 ## Getting Started
 
+Shared packaging files are located in the [.github/packaging/common](.github/packaging/common) directory.
+These scripts are used to build docker images for each supported OS distribution. 
+
+Scripts in [.github/packaging/common](.github/packaging/common) should be implemented by each project. 
+These include 
+ - test/test_execute.bats
+   - Test cases that install the package from JFrog and make sure the associated executables are available and execute. 
+ - build_package.sh
+   - This should call the Makefile or associated build script for the project, and calls the Makefile in pkg/ to build the package.
+ - install_deps.sh
+   - This script should have a function for each distribution that installs the dependencies for the project.
+ - 
 
 ### Development Setup
 
-<!-- Add project-specific setup instructions here -->
+You must have 
+  - bash >= 4.3
+  - docker
+  - git
 
 ```bash
 # Clone the repository
