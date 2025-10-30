@@ -71,3 +71,4 @@ target/
 .trunk/logs/
 .trunk/notifications/
 .trunk/plugins/
+.github/packaging/project
