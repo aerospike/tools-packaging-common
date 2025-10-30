@@ -30,7 +30,7 @@ You must have
 
 cd (your repository)
 mkdir -p .github/packaging/project
-git submodule add https://github.com/aerospike/packaging-common.git .github/packaging/common
+git submodule add https://github.com/aerospike/server-packaging-common.git .github/packaging/common
 cp -a .github/packaging/common/project-example/* .github/packaging/project/
 # edit .github/packaging/project/* to match your project
 mkdir pkg
