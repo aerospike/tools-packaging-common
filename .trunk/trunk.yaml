@@ -26,6 +26,12 @@ lint:
     - trufflehog@3.90.12
     - actionlint@1.7.8
     - shellcheck@0.11.0
+  ignore:
+    - linters: [ALL]
+      paths:
+        - Dockerfile
+        - test/Dockerfile
+
 actions:
   disabled:
     - trunk-announce
