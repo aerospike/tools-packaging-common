@@ -31,9 +31,6 @@ lint:
       paths:
         - Dockerfile
         - test/Dockerfile
-    - linters: [yamllint]
-      paths:
-        - build-artifacts-example.yml
 
 actions:
   disabled:
