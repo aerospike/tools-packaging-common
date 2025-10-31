@@ -100,7 +100,7 @@ function install_deb_repo() {
   ARCH=$(dpkg --print-architecture)       # e.g. amd64, arm64
   KEYRING=/usr/share/keyrings/aerospike.gpg
   REPO_URL="https://artifact.aerospike.io/artifactory/deb"
-  apt -y install "$UBUNTU_DEPS"
+  apt -y install $UBUNTU_DEPS
   # https://aerospike.atlassian.net/wiki/spaces/DevOps/pages/4371644510/Installing+deb+and+rpm+for+internal+password+protected+use
   # Fetch Aerospike key (if not already present)
 
@@ -160,60 +160,64 @@ EOF
 
 
 function install_deps_debian12() {
-  apt -y install "$UBUNTU_DEPS"
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_debian13() {
-  apt -y install "$UBUNTU_DEPS"
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_ubuntu20.04() {
-  apt -y install "$UBUNTU_DEPS"
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_ubuntu22.04() {
-  apt -y install "$UBUNTU_DEPS"
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_ubuntu24.04() {
-  apt -y install "$UBUNTU_DEPS"
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_el8() {
-  dnf install -y "$REDHAT_DEPS"
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }
 
 function install_deps_el9() {
-  dnf install -y "$REDHAT_DEPS"
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }
 
 function install_deps_el10() {
-  dnf install -y "$REDHAT_DEPS"
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }
 
 function install_deps_amzn2023() {
-  dnf install -y "$REDHAT_DEPS"
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }
