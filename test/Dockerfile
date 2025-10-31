@@ -1,3 +1,4 @@
+# // trunk-ignore-all
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 ARG ENV_DISTRO

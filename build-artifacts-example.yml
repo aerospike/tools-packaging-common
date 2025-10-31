@@ -7,11 +7,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'dev/*'
-      - 'hotfix/*'
+      - "dev/*"
+      - "hotfix/*"
     tags:
-      - '*'
-
+      - "*"
 
 jobs:
   build-artifacts:
