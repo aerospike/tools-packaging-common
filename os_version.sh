@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 # ------------------------------------------------------------------------------
 # Copyright 2012-2023 Aerospike, Inc.
 #
@@ -24,7 +25,7 @@ then
 fi
 
 error() {
-	echo 'error:' $* >&2
+	echo 'error:' "$*" >&2
 }
 
 main() {

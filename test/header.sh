@@ -6,11 +6,12 @@ function install_deb_package() {
 }
 
 function install_rpm_package() {
-  dnf install -y aerospike-"$PACKAGE_NAME"-"$(echo $PKG_VERSION | tr '-' '_')"-1.$(uname -m)
+  RPM_FORMAT="$(echo "$PKG_VERSION" | tr '-' '_')"
+  dnf install -y "aerospike-$PACKAGE_NAME-$RPM_FORMAT-1.$(uname -m)"
 }
 
 function install_deps () {
-  install_deps_$1
+  install_deps_"$1"
     if command -v apt;
     then
       install_deb_package

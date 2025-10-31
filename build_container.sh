@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 set -xeuo pipefail
 
 function build_container() {
   docker build \
-    --build-arg=BASE_IMAGE=${distro_to_image["$1"]} \
+    --build-arg=BASE_IMAGE="${distro_to_image["$1"]}" \
     --build-arg=ENV_DISTRO="$1" \
     --build-arg=REPO_NAME="$REPO_NAME" \
     -t "$REPO_NAME-pkg-builder-$1":"$PKG_VERSION" \

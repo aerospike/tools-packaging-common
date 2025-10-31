@@ -19,7 +19,7 @@ function build_packages(){
   export VERSION
 
   # package
-  cd $GIT_DIR/pkg || exit 1
+  cd "$GIT_DIR"/pkg || exit 1
   make clean
   echo "building package for $BUILD_DISTRO"
 

@@ -45,7 +45,7 @@ cp .github/packaging/common/pkg-example/Makefile pkg/
 
 <!-- Describe your project-example structure here -->
 
-```
+```text
 This repository should be setup in your project as follows:
 .
 ├── .github/

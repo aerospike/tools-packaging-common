@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 set -xeuo pipefail
 env
 
@@ -13,7 +14,7 @@ REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 |
 REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
 PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always)}
 
-if [ ${TEST_MODE:-"false"} = "true" ]; then
+if [ "${TEST_MODE:-"false"}" = "true" ]; then
   BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test/"
   BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/test/"
 else
@@ -59,7 +60,7 @@ BUILD_CONTAINERS=false
 EXECUTE_BUILD=false
 BUILD_DISTRO=${BUILD_DISTRO:-"all"}
 
-while getopts "tibced:" opt; do
+while getopts "tbced:" opt; do
     case ${opt} in
         t )
             RUN_TESTS=true
@@ -76,6 +77,8 @@ while getopts "tibced:" opt; do
         d )
             BUILD_DISTRO="$OPTARG"
             ;;
+        * )
+            ;;
     esac
 done
 shift $((OPTIND -1))
@@ -91,7 +94,7 @@ then
     -d [ redhat | ubuntu | debian ]" 1>&2
     exit 1
 fi
-
+export ENV_DISTRO
 if grep -q 20.04 /etc/os-release; then
   ENV_DISTRO="ubuntu20.04"
 elif grep -q 22.04 /etc/os-release; then

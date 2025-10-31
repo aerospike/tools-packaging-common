@@ -9,6 +9,7 @@ JF_USERNAME=${JF_USERNAME:-"You must provide your JFrog username"}
 JF_TOKEN=${JF_TOKEN:-"You must provide your JFrog token"}
 
 #This commit should have already been pushed, so the action has built it and uploaded it to JFrog
+export PKG_VERSION
 PKG_VERSION=$(git describe --tags --always)
 
 #Build the test container and install the current version of asconfig from JFrog
@@ -17,7 +18,7 @@ TEST_MODE=true .github/packaging/common/test/entrypoint.sh -c -d el9
 #...
 
 #Execute the test runner
-docker run -t -i asconfig-pkg-tester-el9:$(git describe --tags --always)
+docker run -t -i "asconfig-pkg-tester-el9:$(git describe --tags --always)"
 
 #...
 #test_execute.bats
