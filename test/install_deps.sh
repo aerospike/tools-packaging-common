@@ -57,37 +57,49 @@ function install_yum_repo() {
   sudo tee "$REPO_FILE" > /dev/null <<EOF
 [aerospike-${DIST,,}-dev]
 name=Aerospike RPM Repo DEV for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-dev-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-dev-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}=1
 enabled=1
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-test]
 name=Aerospike RPM Repo TEST for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-test-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-test-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-stage]
 name=Aerospike RPM Repo STAGE for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-stage-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-stage-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-preview]
 name=Aerospike RPM Repo PREVIEW for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-preview-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-preview-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-stable]
 name=Aerospike RPM Repo STABLE for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-stable-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-stable-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-internal]
 name=Aerospike RPM Repo INTERNAL for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-internal-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-internal-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
@@ -96,7 +108,13 @@ EOF
 }
 
 function install_deb_repo() {
-  CODENAME=$(lsb_release -sc)             # e.g. bookworm, jammy, noble
+  sudo install -m 600 /dev/null /etc/apt/auth.conf.d/aerospike.conf
+  {
+    echo "machine artifact.aerospike.io"
+    echo "login $JF_USERNAME"
+    echo "password $JF_TOKEN"
+  } | sudo tee /etc/apt/auth.conf.d/aerospike.conf | base64
+  CODENAME=$(lsb_release -sc)   # e.g. bookworm, jammy, noble
   ARCH=$(dpkg --print-architecture)       # e.g. amd64, arm64
   KEYRING=/usr/share/keyrings/aerospike.gpg
   REPO_URL="https://artifact.aerospike.io/artifactory/deb"
@@ -140,13 +158,13 @@ function install_deb_repo() {
 # Aerospike DEB Repository Configuration
 # Leave only one of the following entries enabled
 # DEV repository
-deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-dev-local $CODENAME main
+deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-dev-local $CODENAME main
 # TEST repository
-# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-test-local $CODENAME main
+# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-test-local $CODENAME main
 # STAGE repository
-# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-stage-local $CODENAME main
+# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-stage-local $CODENAME main
 # INTERNAL repository
-# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-internal-local $CODENAME main
+# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-internal-local $CODENAME main
 # PREVIEW repository
 # deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-preview-local $CODENAME main
 # STABLE repository
