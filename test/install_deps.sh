@@ -22,7 +22,7 @@ function install_yum_repo() {
       echo "JF_USERNAME not present"
       exit 1
   fi
-  JF_USERNAME="${JF_USERNAME//@/%40}"
+#  JF_USERNAME="${JF_USERNAME//@/%40}"
   if [ -z "$JF_TOKEN" ]; then
       echo "JF_TOKEN not present"
       exit 1
@@ -59,7 +59,7 @@ function install_yum_repo() {
 name=Aerospike RPM Repo DEV for ${DIST^^} (\$basearch)
 baseurl=https://artifact.aerospike.io/artifactory/database-rpm-dev-local/${DIST,,}/$ARCH/
 username=${JF_USERNAME}
-password=${JF_TOKEN}=1
+password=${JF_TOKEN}
 enabled=1
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
