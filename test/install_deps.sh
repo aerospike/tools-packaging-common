@@ -113,7 +113,7 @@ function install_deb_repo() {
     echo "machine artifact.aerospike.io"
     echo "login $JF_USERNAME"
     echo "password $JF_TOKEN"
-  } | sudo tee /etc/apt/auth.conf.d/aerospike.conf | base64
+  } | sudo tee /etc/apt/auth.conf.d/aerospike.conf > /dev/null
   CODENAME=$(lsb_release -sc)   # e.g. bookworm, jammy, noble
   ARCH=$(dpkg --print-architecture)       # e.g. amd64, arm64
   KEYRING=/usr/share/keyrings/aerospike.gpg
