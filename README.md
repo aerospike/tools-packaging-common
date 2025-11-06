@@ -56,6 +56,8 @@ This repository should be setup in your project as follows:
 └── pkg/Makefile                            # Makefile for building the package
 ```
 
+![Github Actions Workflow](docs/img/gha-packaging-workflow.jpg)
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
