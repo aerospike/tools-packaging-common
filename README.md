@@ -31,10 +31,10 @@ You must have
 cd (your repository)
 mkdir -p .github/packaging/project
 git submodule add https://github.com/aerospike/server-packaging-common.git .github/packaging/common
-cp -a $SERVER_PACKAGING_COMMON_DIR/project-example/* .github/packaging/project/
+cp -a .github/packaging/common/project-example/* .github/packaging/project/
 # edit .github/packaging/project/* to match your project
 mkdir pkg
-cp $SERVER_PACKAGING_COMMON_DIR/pkg-example/Makefile pkg/
+cp .github/packaging/common/pkg-example/Makefile pkg/
 # edit pkg/Makefile to match your project
 
 
