@@ -84,7 +84,7 @@ name=Aerospike RPM Repo PREVIEW for ${DIST^^} (\$basearch)
 baseurl=https://artifact.aerospike.io/artifactory/database-rpm-preview-local/${DIST,,}/$ARCH/
 username=${JF_USERNAME}
 password=${JF_TOKEN}
-enabled=0
+enabled=1
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-stable]
@@ -166,7 +166,7 @@ deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.ae
 # INTERNAL repository
 # deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-internal-local $CODENAME main
 # PREVIEW repository
-# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-preview-local $CODENAME main
+deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-preview-local $CODENAME main
 # STABLE repository
 # deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-stable-local $CODENAME main
 EOF
