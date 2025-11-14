@@ -22,7 +22,6 @@ function install_yum_repo() {
       echo "JF_USERNAME not present"
       exit 1
   fi
-  JF_USERNAME="${JF_USERNAME//@/%40}"
   if [ -z "$JF_TOKEN" ]; then
       echo "JF_TOKEN not present"
       exit 1
@@ -57,37 +56,49 @@ function install_yum_repo() {
   sudo tee "$REPO_FILE" > /dev/null <<EOF
 [aerospike-${DIST,,}-dev]
 name=Aerospike RPM Repo DEV for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-dev-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-dev-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=1
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-test]
 name=Aerospike RPM Repo TEST for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-test-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-test-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-stage]
 name=Aerospike RPM Repo STAGE for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-stage-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-stage-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-preview]
 name=Aerospike RPM Repo PREVIEW for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-preview-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-preview-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-stable]
 name=Aerospike RPM Repo STABLE for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-stable-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-stable-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
 [aerospike-${DIST,,}-internal]
 name=Aerospike RPM Repo INTERNAL for ${DIST^^} (\$basearch)
-baseurl=https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-rpm-internal-local/${DIST,,}/$ARCH/
+baseurl=https://artifact.aerospike.io/artifactory/database-rpm-internal-local/${DIST,,}/$ARCH/
+username=${JF_USERNAME}
+password=${JF_TOKEN}
 enabled=0
 gpgcheck=1
 gpgkey=https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public
@@ -96,20 +107,20 @@ EOF
 }
 
 function install_deb_repo() {
-  CODENAME=$(lsb_release -sc)             # e.g. bookworm, jammy, noble
+  sudo install -m 600 /dev/null /etc/apt/auth.conf.d/aerospike.conf
+  {
+    echo "machine artifact.aerospike.io"
+    echo "login $JF_USERNAME"
+    echo "password $JF_TOKEN"
+  } | sudo tee /etc/apt/auth.conf.d/aerospike.conf > /dev/null
+  CODENAME=$(lsb_release -sc)   # e.g. bookworm, jammy, noble
   ARCH=$(dpkg --print-architecture)       # e.g. amd64, arm64
   KEYRING=/usr/share/keyrings/aerospike.gpg
-  REPO_URL="https://artifact.aerospike.io/artifactory/deb"
-  apt -y install "$UBUNTU_DEPS"
+  # shellcheck disable=SC2086
+  apt -y install $UBUNTU_DEPS
   # https://aerospike.atlassian.net/wiki/spaces/DevOps/pages/4371644510/Installing+deb+and+rpm+for+internal+password+protected+use
   # Fetch Aerospike key (if not already present)
-
   wget -qO - https://aerospike.jfrog.io/artifactory/api/security/keypair/aerospike/public | gpg --batch --no-tty --dearmor -o $KEYRING
-  # 2. Add the Aerospike repository to the sources list
-  echo "deb [arch=$ARCH signed-by=$KEYRING] $REPO_URL $CODENAME main" >> /etc/apt/sources.list.d/aerospike.list
-  apt-get update
-
-
 
   # This script creates an Aerospike apt sources.list.d file for the detected OS and arch
   # Only the TEST repo is enabled; all other SDLC-stage repos are disabled by default.
@@ -131,8 +142,7 @@ function install_deb_repo() {
       echo "Cannot determine OS distribution/version"
       exit 1
   fi
-  # Fetch Aerospike key (if not already present)
-#  wget -qO - https://artifact.aerospike.io/artifactory/api/security/keypair/aerospike/public | gpg --batch --no-tty --dearmor -o /usr/share/keyrings/aerospike.gpg
+
   # Output file
   REPO_FILE="/etc/apt/sources.list.d/aerospike-${CODENAME}-all.list"
   # Write sources.list content
@@ -140,13 +150,13 @@ function install_deb_repo() {
 # Aerospike DEB Repository Configuration
 # Leave only one of the following entries enabled
 # DEV repository
-deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-dev-local $CODENAME main
+deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-dev-local $CODENAME main
 # TEST repository
-# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-test-local $CODENAME main
+# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-test-local $CODENAME main
 # STAGE repository
-# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-stage-local $CODENAME main
+# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-stage-local $CODENAME main
 # INTERNAL repository
-# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://${JF_USERNAME}:${JF_TOKEN}@artifact.aerospike.io/artifactory/database-deb-internal-local $CODENAME main
+# deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-internal-local $CODENAME main
 # PREVIEW repository
 # deb [arch=$ARCH signed-by=/usr/share/keyrings/aerospike.gpg] https://artifact.aerospike.io/artifactory/database-deb-preview-local $CODENAME main
 # STABLE repository
@@ -158,62 +168,74 @@ EOF
   apt-get update  
 }
 
-
 function install_deps_debian12() {
-  apt -y install "$UBUNTU_DEPS"
+  # shellcheck disable=SC2086
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_debian13() {
-  apt -y install "$UBUNTU_DEPS"
+  # shellcheck disable=SC2086
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_ubuntu20.04() {
-  apt -y install "$UBUNTU_DEPS"
+  # shellcheck disable=SC2086
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_ubuntu22.04() {
-  apt -y install "$UBUNTU_DEPS"
+  # shellcheck disable=SC2086
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_ubuntu24.04() {
-  apt -y install "$UBUNTU_DEPS"
+  # shellcheck disable=SC2086
+  apt -y install $UBUNTU_DEPS
   install_test_framework
   install_deb_repo
   install_deb_package
 }
 
 function install_deps_el8() {
-  dnf install -y "$REDHAT_DEPS"
+  # shellcheck disable=SC2086
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }
 
 function install_deps_el9() {
-  dnf install -y "$REDHAT_DEPS"
+  # shellcheck disable=SC2086
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }
 
 function install_deps_el10() {
-  dnf install -y "$REDHAT_DEPS"
+  # shellcheck disable=SC2086
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }
 
 function install_deps_amzn2023() {
-  dnf install -y "$REDHAT_DEPS"
+  # shellcheck disable=SC2086
+  dnf install -y $REDHAT_DEPS
   install_test_framework
   install_yum_repo
+  install_rpm_package
 }

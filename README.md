@@ -1,4 +1,4 @@
-# Server Packaging Common
+# Tools Packaging Common
 
 This repository contains common scripts and files for packaging Aerospike Tools
 
@@ -30,7 +30,7 @@ You must have
 
 cd (your repository)
 mkdir -p .github/packaging/project
-git submodule add https://github.com/aerospike/server-packaging-common.git .github/packaging/common
+git submodule add https://github.com/aerospike/tools-packaging-common.git .github/packaging/common
 cp -a .github/packaging/common/project-example/* .github/packaging/project/
 # edit .github/packaging/project/* to match your project
 mkdir pkg
@@ -55,6 +55,8 @@ This repository should be setup in your project as follows:
 │   └── dependabot.yml                      # Dependabot configuration
 └── pkg/Makefile                            # Makefile for building the package
 ```
+
+![Github Actions Workflow](docs/img/gha-packaging-workflow.jpg)
 
 ## Contributing
 
