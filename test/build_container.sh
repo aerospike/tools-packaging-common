@@ -5,6 +5,8 @@ set -xeuo pipefail
 function build_container() {
   docker build \
     --progress=plain \
+    --pull \
+    --no-cache \
     --build-arg=BASE_IMAGE="${distro_to_image["$1"]}" \
     --build-arg=ENV_DISTRO="$1" \
     --build-arg=PKG_VERSION="$PKG_VERSION" \
