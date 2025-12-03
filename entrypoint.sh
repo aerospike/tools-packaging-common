@@ -14,6 +14,15 @@ REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 |
 REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
 PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always)}
 
+# Use prebuilt builder images instead of building locally
+# e.g. ghcr.io/aerospike/asadm-builder-el8:<tag>
+: "${USE_REMOTE_BUILDER_IMAGES:=false}"
+
+# Prefix for prebuilt builder images; override from CI
+# We'll form: ${BUILDER_IMAGE_PREFIX}-${distro}:${PKG_VERSION}
+: "${BUILDER_IMAGE_PREFIX:=ghcr.io/aerospike/${REPO_NAME}-builder}"
+
+
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
   BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test/"
   BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/test/"
@@ -130,5 +139,27 @@ elif [ "$BUILD_CONTAINERS" = "true" ]; then
   build_container "$BUILD_DISTRO"
 elif [ "$EXECUTE_BUILD" = "true" ]; then
     echo "building package for $BUILD_DISTRO"
-    execute_build_image "$BUILD_DISTRO"
+
+    if [ "${USE_REMOTE_BUILDER_IMAGES}" = "true" ]; then
+      # Use prebuilt builder images from registry
+      IMAGE="${BUILDER_IMAGE_PREFIX}-${BUILD_DISTRO}:${PKG_VERSION}"
+      echo "Using prebuilt builder image: $IMAGE"
+      docker pull "$IMAGE"
+
+      # Make sure this matches what execute_build_image currently does:
+      # - mount repo
+      # - put artifacts in ../dist/$BUILD_DISTRO
+      export BUILD_DISTRO="$BUILD_DISTRO"
+      docker run \
+        -v "$(realpath ../dist)":/tmp/output \
+        -e BUILD_DISTRO \
+        "$IMAGE" 
+      ls -laht ../dist
+
+      # If your existing execute_build_image copies artifacts to ../dist/$BUILD_DISTRO,
+      # either keep that behavior inside the image, or add a cp step here.
+    else
+      # Old behavior: assume image was just built locally by -c
+      execute_build_image "$BUILD_DISTRO"
+    fi
 fi
