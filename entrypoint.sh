@@ -136,7 +136,7 @@ elif [ "$EXECUTE_BUILD" = "true" ]; then
 
     if [ "${USE_REMOTE_BUILDER_IMAGES}" = "true" ]; then
       # Use prebuilt builder images from registry
-      IMAGE="${BUILDER_IMAGE_PREFIX}-${BUILD_DISTRO}:${PKG_VERSION}"
+      IMAGE="${BUILDER_IMAGE_PREFIX}-${BUILD_DISTRO}:latest"
       echo "Using prebuilt builder image: $IMAGE"
       docker pull "$IMAGE"
 
