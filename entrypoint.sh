@@ -41,7 +41,7 @@ export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
 # Prefix for prebuilt builder images; override from CI
 # We'll form: ${BUILDER_IMAGE_PREFIX}-${distro}:${PKG_VERSION}
 : "${BUILDER_IMAGE_PREFIX:=ghcr.io/aerospike/${PACKAGE_NAME}-pkg-builder}"
-
+: "${ARCH:=amd64}"
 
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
   BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test/"
@@ -136,7 +136,7 @@ elif [ "$EXECUTE_BUILD" = "true" ]; then
 
     if [ "${USE_REMOTE_BUILDER_IMAGES}" = "true" ]; then
       # Use prebuilt builder images from registry
-      IMAGE="${BUILDER_IMAGE_PREFIX}-${BUILD_DISTRO}:latest"
+      IMAGE="${BUILDER_IMAGE_PREFIX}-${BUILD_DISTRO}-${ARCH}:latest"
       echo "Using prebuilt builder image: $IMAGE"
       docker pull "$IMAGE"
 
