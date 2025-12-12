@@ -133,27 +133,5 @@ elif [ "$BUILD_CONTAINERS" = "true" ]; then
   build_container "$BUILD_DISTRO"
 elif [ "$EXECUTE_BUILD" = "true" ]; then
     echo "building package for $BUILD_DISTRO"
-
-    if [ "${USE_REMOTE_BUILDER_IMAGES}" = "true" ]; then
-      # Use prebuilt builder images from registry
-      IMAGE="${BUILDER_IMAGE_PREFIX}-${BUILD_DISTRO}-${ARCH}:latest"
-      echo "Using prebuilt builder image: $IMAGE"
-      docker pull "$IMAGE"
-
-      # Make sure this matches what execute_build_image currently does:
-      # - mount repo
-      # - put artifacts in ../dist/$BUILD_DISTRO
-      export BUILD_DISTRO="$BUILD_DISTRO"
-      docker run \
-        -v "$(realpath ../dist)":/tmp/output \
-        -e BUILD_DISTRO \
-        "$IMAGE" 
-      ls -laht ../dist
-
-      # If your existing execute_build_image copies artifacts to ../dist/$BUILD_DISTRO,
-      # either keep that behavior inside the image, or add a cp step here.
-    else
-      # Old behavior: assume image was just built locally by -c
-      execute_build_image "$BUILD_DISTRO"
-    fi
+    execute_build_image "$BUILD_DISTRO"
 fi
