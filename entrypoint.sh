@@ -44,11 +44,11 @@ export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
 : "${ARCH:=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/' -e 's/arm64/arm64/')}"
 
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
-  BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test/"
-  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/test/"
+  BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test"
+  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/test"
 else
-  BASE_COMMON_DIR="$(pwd)/.github/packaging/common/"
-  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/"
+  BASE_COMMON_DIR="$(pwd)/.github/packaging/common"
+  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project"
 fi
 
 if [ -f "$BASE_PROJECT_DIR/build_package.sh" ]; then
