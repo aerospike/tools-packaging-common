@@ -3,11 +3,12 @@
 set -xeuo pipefail
 
 function build_container() {
+  local distro=$1
   docker build --progress=plain \
-    --build-arg=BASE_IMAGE="${distro_to_image["$1"]}" \
-    --build-arg=ENV_DISTRO="$1" \
+    --build-arg=BASE_IMAGE="${distro_to_image["$distro"]}" \
+    --build-arg=ENV_DISTRO="$distro" \
     --build-arg=REPO_NAME="$REPO_NAME" \
-    -t "$PACKAGE_NAME-pkg-builder-$1-${ARCH}":"$PKG_VERSION" \
+    -t "$PACKAGE_NAME-pkg-builder-$distro-$ARCH":"$PKG_VERSION" \
     -f .github/packaging/common/Dockerfile .
 }
 
