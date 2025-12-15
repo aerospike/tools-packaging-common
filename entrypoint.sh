@@ -30,7 +30,7 @@ repo_to_package["aerospike-tools"]="tools"
 
 REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 | cut -d '.' -f 1)"}
 REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
-PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=9)}
+PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
 
 export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
 
