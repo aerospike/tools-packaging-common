@@ -41,7 +41,7 @@ export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
 # Prefix for prebuilt builder images; override from CI
 # We'll form: ${BUILDER_IMAGE_PREFIX}-${distro}:${PKG_VERSION}
 : "${BUILDER_IMAGE_PREFIX:=ghcr.io/aerospike/${PACKAGE_NAME}-pkg-builder}"
-: "${ARCH:=amd64}"
+: "${ARCH:=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/' -e 's/arm64/arm64/')}"
 
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
   BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test/"
