@@ -16,7 +16,7 @@ function build_container() {
     -t "$PACKAGE_NAME"-pkg-tester-"$distro"-$ARCH:"$PKG_VERSION" \
     -f .github/packaging/common/test/Dockerfile .
 
-  docker tag "$REPO_NAME"-pkg-tester-"$1":"$PKG_VERSION" "$REPO_NAME"-pkg-tester-"$1":"latest"
+  docker tag "$PACKAGE_NAME"-pkg-tester-"$distro"-"$ARCH":"$PKG_VERSION" "$PACKAGE_NAME"-pkg-tester-"$distro"-"$ARCH":"latest"
 }
 
 
