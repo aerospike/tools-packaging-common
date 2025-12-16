@@ -32,14 +32,17 @@ REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 |
 REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
 PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
 
+export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
+
 # Use prebuilt builder images instead of building locally
-# e.g. ghcr.io/aerospike/asadm-builder-el8:<tag>
+# e.g. ghcr.io/aerospike/asadm-pkg-builder-el8-amd64:<tag>
 : "${USE_REMOTE_BUILDER_IMAGES:=false}"
 
 # Prefix for prebuilt builder images; override from CI
-# We'll form: ${BUILDER_IMAGE_PREFIX}-${distro}:${PKG_VERSION}
+# We'll form: ${BUILDER_IMAGE_PREFIX}-${BUILD_DITRO}-${ARCH}:${PKG_VERSION}
 : "${BUILDER_IMAGE_PREFIX:=ghcr.io/aerospike/${PACKAGE_NAME}-pkg-builder}"
 : "${ARCH:=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/' -e 's/arm64/arm64/')}"
+export ARCH
 
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
   BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test"
@@ -53,8 +56,6 @@ if [ -f "$BASE_PROJECT_DIR/build_package.sh" ]; then
   source "$BASE_PROJECT_DIR/build_package.sh"
 fi
 
-export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
-export ARCH
 source "$BASE_COMMON_DIR/build_container.sh"
 
 INSTALL=false
