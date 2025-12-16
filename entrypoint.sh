@@ -9,23 +9,10 @@ if [ -z "${BASH_VERSION:-}" ] || [ "${BASH_VERSION%%.*}" -lt 4 ]; then
     exit 1
 fi
 
-
-REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 | cut -d '.' -f 1)"}
-REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
-PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always)}
-
-if [ "${TEST_MODE:-"false"}" = "true" ]; then
-  BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test/"
-  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/test/"
-else
-  BASE_COMMON_DIR="$(pwd)/.github/packaging/common/"
-  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/"
-fi
-
 declare -A distro_to_image
-distro_to_image["el8"]="redhat/ubi8:8.10"
-distro_to_image["el9"]="redhat/ubi9:9.6"
-distro_to_image["el10"]="redhat/ubi10:10.0"
+distro_to_image["el8"]="redhat/ubi8"
+distro_to_image["el9"]="redhat/ubi9"
+distro_to_image["el10"]="redhat/ubi10"
 distro_to_image["amzn2023"]="amazonlinux:2023"
 distro_to_image["debian12"]="debian:bookworm"
 distro_to_image["debian13"]="debian:trixie"
@@ -41,18 +28,35 @@ repo_to_package["aerospike-tools-backup"]="asbackup"
 repo_to_package["aql"]="aql"
 repo_to_package["aerospike-tools"]="tools"
 
+REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 | cut -d '.' -f 1)"}
+REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
+PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
 
 export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
 
+# Use prebuilt builder images instead of building locally
+# e.g. ghcr.io/aerospike/asadm-pkg-builder-el8-amd64:<tag>
+: "${USE_REMOTE_BUILDER_IMAGES:=false}"
 
+# Prefix for prebuilt builder images; override from CI
+# We'll form: ${BUILDER_IMAGE_PREFIX}-${BUILD_DITRO}-${ARCH}:${PKG_VERSION}
+: "${BUILDER_IMAGE_PREFIX:=ghcr.io/aerospike/${PACKAGE_NAME}-pkg-builder}"
+: "${ARCH:=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/' -e 's/arm64/arm64/')}"
+export ARCH
+
+if [ "${TEST_MODE:-"false"}" = "true" ]; then
+  BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test"
+  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project/test"
+else
+  BASE_COMMON_DIR="$(pwd)/.github/packaging/common"
+  BASE_PROJECT_DIR="$(pwd)/.github/packaging/project"
+fi
 
 if [ -f "$BASE_PROJECT_DIR/build_package.sh" ]; then
   source "$BASE_PROJECT_DIR/build_package.sh"
 fi
 
 source "$BASE_COMMON_DIR/build_container.sh"
-
-
 
 INSTALL=false
 RUN_TESTS=false
