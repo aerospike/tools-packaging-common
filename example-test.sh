@@ -23,7 +23,7 @@ TEST_MODE=true .github/packaging/common/test/entrypoint.sh -c -d "$DISTRO"
 #...
 
 #Execute the test runner
-docker run "$PACKAGE_NANE-pkg-tester-$DISTRO-$ARCH:$PKG_VERSION"
+docker run "$PACKAGE_NAME-pkg-tester-$DISTRO-$ARCH:$PKG_VERSION"
 
 #...
 #test_execute.bats
