@@ -16,7 +16,7 @@ JF_TOKEN=${JF_TOKEN:-"You must provide your JFrog token"}
 
 #This commit should have already been pushed, so the action has built it and uploaded it to JFrog
 export PKG_VERSION
-PKG_VERSION=$(git describe --tags --always)
+PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
 
 #Build the test container and install the current version of asconfig from JFrog
 # -d specifies the distro to test
@@ -24,7 +24,7 @@ TEST_MODE=true .github/packaging/common/test/entrypoint.sh -c -d "$DISTRO"
 #...
 
 #Execute the test runner
-docker run "$REPO_NAME-pkg-tester-$DISTRO:$(git describe --tags --always)"
+docker run "$PACKAGE_NANE-pkg-tester-$DISTRO-$ARCH:$PKG_VERSION"
 
 #...
 #test_execute.bats
