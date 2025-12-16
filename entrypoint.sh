@@ -32,8 +32,6 @@ REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 |
 REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
 PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
 
-export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
-
 # Use prebuilt builder images instead of building locally
 # e.g. ghcr.io/aerospike/asadm-builder-el8:<tag>
 : "${USE_REMOTE_BUILDER_IMAGES:=false}"
@@ -55,6 +53,8 @@ if [ -f "$BASE_PROJECT_DIR/build_package.sh" ]; then
   source "$BASE_PROJECT_DIR/build_package.sh"
 fi
 
+export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
+export ARCH
 source "$BASE_COMMON_DIR/build_container.sh"
 
 INSTALL=false
