@@ -20,7 +20,7 @@ export PKG_VERSION
 export PACKAGE_NAME
 
 if [ "${GITHUB_ACTIONS:-}" = "true" ] && [ "${USE_REMOTE_BUILDER_IMAGES:-false}" = "true" ]; then
-  echo "Use pre-built image $image"
+  echo "Use pre-built image."
   TEST_MODE=true .github/packaging/common/test/entrypoint.sh -e -d "$DISTRO"
 else
   #Build the test container and install the current version of asconfig from JFrog

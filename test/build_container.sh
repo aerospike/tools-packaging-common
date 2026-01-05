@@ -4,6 +4,8 @@ set -xeuo pipefail
 
 function build_container() {
   local distro=$1
+  local image="${PACKAGE_NAME}-pkg-tester-${distro}-${ARCH}"
+
   docker build \
     --progress=plain \
     --build-arg=BASE_IMAGE="${distro_to_image[$distro]}" \
@@ -13,10 +15,10 @@ function build_container() {
     --build-arg=JF_TOKEN="$JF_TOKEN" \
     --build-arg=PACKAGE_NAME="$PACKAGE_NAME" \
     --build-arg=REPO_NAME="$REPO_NAME" \
-    -t "$PACKAGE_NAME"-pkg-tester-"$distro"-$ARCH:"$PKG_VERSION" \
+    -t "${image}:${PKG_VERSION}" \
     -f .github/packaging/common/test/Dockerfile .
 
-  docker tag "$PACKAGE_NAME"-pkg-tester-"$distro"-"$ARCH":"$PKG_VERSION" "$PACKAGE_NAME"-pkg-tester-"$distro"-"$ARCH":"latest"
+  docker tag "${image}:$PKG_VERSION" "${image}:latest"
 }
 
 function execute_build_image() {
