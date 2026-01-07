@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DISTRO=${1:-"el9"}
+DISTRO=${1:-}
 
 GIT_REPO_NAME=$(git config --get remote.origin.url | rev | cut -d '.' -f 2 | rev | cut -d '/' -f 2)
 REPO_NAME=${2:-"$GIT_REPO_NAME"}
