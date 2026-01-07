@@ -5,16 +5,18 @@ set -xeuo pipefail
 function build_container() {
   local distro=$1
   local pushImage="${BUILD_BUILDER_IMAGES:-false}"
-  local image="${PACKAGE_NAME}-pkg-builder-${distro}-${ARCH}:${IMAGE_TAG}"
+  local image="${PACKAGE_NAME}-pkg-builder-${distro}-${ARCH}"
 
   docker build --progress=plain \
     --build-arg=BASE_IMAGE="${distro_to_image["$distro"]}" \
     --build-arg=ENV_DISTRO="$distro" \
     --build-arg=REPO_NAME="$REPO_NAME" \
-    -t "$image" \
+    -t "${image}:${IMAGE_TAG}" \
     -f .github/packaging/common/Dockerfile .
   if [[ "${pushImage}" == "true" ]]; then
-    docker push "$image"
+    docker tag 	"${image}:${IMAGE_TAG}" "${image}:latest"  
+    docker push "${image}:${IMAGE_TAG}"
+    docker push "${image}:latest"
   fi	  
 }
 
@@ -25,7 +27,7 @@ function execute_build_image() {
   local use_remote="${USE_REMOTE_BUILDER_IMAGES:-false}"
 
   # Default local image name
-  local local_image="${PACKAGE_NAME}-pkg-builder-${BUILD_DISTRO}-${ARCH}:${PKG_VERSION}"
+  local local_image="${PACKAGE_NAME}-pkg-builder-${BUILD_DISTRO}-${ARCH}:${IMAGE_TAG}"
 
   # Optional remote prefix, artifact.aerospike.io/database-container-dev-local/aerospike-tools/<package_name>-pkg-builder
   local prefix="${BUILDER_IMAGE_PREFIX:-}"
@@ -35,7 +37,7 @@ function execute_build_image() {
   if [ "$use_remote" = "true" ]; then
     # If no prefix is set, fall back to local naming (so nothing breaks)
     if [ -n "$prefix" ]; then
-      image="${prefix}-${BUILD_DISTRO}-${ARCH}:latest"
+      image="${prefix}-${BUILD_DISTRO}-${ARCH}:${IMAGE_TAG}"
     else
       image="$local_image"
     fi
