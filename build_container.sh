@@ -13,7 +13,7 @@ function build_container() {
     --build-arg=REPO_NAME="$REPO_NAME" \
     -t "$image" \
     -f .github/packaging/common/Dockerfile .
-  if [ $pushImage ]; then
+  if [[ "${pushImage}" == "true" ]]; then
     docker push "$image"
   fi	  
 }
