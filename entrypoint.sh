@@ -10,9 +10,9 @@ if [ -z "${BASH_VERSION:-}" ] || [ "${BASH_VERSION%%.*}" -lt 4 ]; then
 fi
 
 declare -A distro_to_image
-distro_to_image["el8"]="redhat/ubi8:8.10"
-distro_to_image["el9"]="redhat/ubi9:9.6"
-distro_to_image["el10"]="redhat/ubi10:10.0"
+distro_to_image["el8"]="redhat/ubi8"
+distro_to_image["el9"]="redhat/ubi9"
+distro_to_image["el10"]="redhat/ubi10"
 distro_to_image["amzn2023"]="amazonlinux:2023"
 distro_to_image["debian12"]="debian:bookworm"
 distro_to_image["debian13"]="debian:trixie"
