@@ -8,7 +8,7 @@ function build_container() {
 
   docker build \
     --progress=plain \
-    --build-arg=BASE_IMAGE="${distro_to_image[$distro]}" \
+    --build-arg=BASE_IMAGE="${distro_to_test_image[$distro]}" \
     --build-arg=ENV_DISTRO="$distro" \
     --build-arg=PKG_VERSION="$PKG_VERSION" \
     --build-arg=JF_USERNAME="$JF_USERNAME" \

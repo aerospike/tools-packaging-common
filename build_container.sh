@@ -4,12 +4,18 @@ set -xeuo pipefail
 
 function build_container() {
   local distro=$1
+  local pushImage="${BUILD_BUILDER_IMAGES:-false}"
+  local image="${PACKAGE_NAME}-pkg-builder-${distro}-${ARCH}:${IMAGE_TAG}"
+
   docker build --progress=plain \
     --build-arg=BASE_IMAGE="${distro_to_image["$distro"]}" \
     --build-arg=ENV_DISTRO="$distro" \
     --build-arg=REPO_NAME="$REPO_NAME" \
-    -t "$PACKAGE_NAME-pkg-builder-$distro-$ARCH":"$PKG_VERSION" \
+    -t "$image" \
     -f .github/packaging/common/Dockerfile .
+  if [ $pushImage ]; then
+    docker push "$image"
+  fi	  
 }
 
 function execute_build_image() {
@@ -21,7 +27,7 @@ function execute_build_image() {
   # Default local image name
   local local_image="${PACKAGE_NAME}-pkg-builder-${BUILD_DISTRO}-${ARCH}:${PKG_VERSION}"
 
-  # Optional remote prefix, e.g. ghcr.io/aerospike/<package_name>-build
+  # Optional remote prefix, artifact.aerospike.io/database-container-dev-local/aerospike-tools/<package_name>-pkg-builder
   local prefix="${BUILDER_IMAGE_PREFIX:-}"
 
   local image

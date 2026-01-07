@@ -10,6 +10,17 @@ if [ -z "${BASH_VERSION:-}" ] || [ "${BASH_VERSION%%.*}" -lt 4 ]; then
 fi
 
 declare -A distro_to_image
+distro_to_image["el8"]="redhat/ubi8:8.9"
+distro_to_image["el9"]="redhat/ubi9:9.4"
+distro_to_image["el10"]="redhat/ubi10:10.0"
+distro_to_image["amzn2023"]="amazonlinux:2023.0.20230322.0"
+distro_to_image["debian12"]="debian:bookworm-20230411"
+distro_to_image["debian13"]="debian:trixie-20251020"
+distro_to_image["ubuntu20.04"]="ubuntu:focal-20210723"
+distro_to_image["ubuntu22.04"]="ubuntu:jammy-20231004"
+distro_to_image["ubuntu24.04"]="ubuntu:noble-20231126.1"
+
+declare -A distro_to_test_image
 distro_to_image["el8"]="redhat/ubi8"
 distro_to_image["el9"]="redhat/ubi9"
 distro_to_image["el10"]="redhat/ubi10"
@@ -31,8 +42,10 @@ repo_to_package["aerospike-tools"]="tools"
 REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 | cut -d '.' -f 1)"}
 REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
 PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
+IMAGE_TAG=${IMAGE_TAG:-$PKG_VERSION}
 
 export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
+export IMAGE_TAG
 
 # Use prebuilt builder images instead of building locally
 # e.g. ghcr.io/aerospike/asadm-pkg-builder-el8-amd64:<tag>
@@ -40,8 +53,8 @@ export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
 
 # Prefix for prebuilt builder images; override from CI
 # We'll form: ${BUILDER_IMAGE_PREFIX}-${BUILD_DITRO}-${ARCH}:${PKG_VERSION}
-: "${BUILDER_IMAGE_PREFIX:=ghcr.io/aerospike/${PACKAGE_NAME}-pkg-builder}"
-: "${ARCH:=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/' -e 's/arm64/arm64/')}"
+: "${BUILDER_IMAGE_PREFIX:=artifact.aerospike.io/database-container-dev-local/aerospike-tools/${PACKAGE_NAME}-pkg-builder}"
+: "${ARCH:=$(uname -m)}"
 export ARCH
 
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
