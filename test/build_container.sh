@@ -37,7 +37,7 @@ function execute_build_image() {
   if [ "$use_remote" = "true" ]; then
     # If no prefix is set, fall back to local naming (so nothing breaks)
     if [ -n "$prefix" ]; then
-      image="${prefix}-${BUILD_DISTRO}-${ARCH}:latest"
+      image="${prefix}-${BUILD_DISTRO}-${ARCH}:${PKG_VERSION}"
     else
       image="$local_image"
     fi
