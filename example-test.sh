@@ -19,16 +19,11 @@ JF_TOKEN=${JF_TOKEN:-"You must provide your JFrog token"}
 export PKG_VERSION
 export PACKAGE_NAME
 
-if [ "${GITHUB_ACTIONS:-}" = "true" ] && [ "${USE_REMOTE_BUILDER_IMAGES:-false}" = "true" ]; then
-  echo "Use pre-built image."
-  TEST_MODE=true .github/packaging/common/test/entrypoint.sh -e -d "$DISTRO"
-else
-  #Build the test container and install the current version of the tool from JFrog
-  # -d specifies the distro to test
-  # build test runner
-  echo "Building test runner ..."
-  TEST_MODE=true .github/packaging/common/test/entrypoint.sh -c -d "$DISTRO"
-  # Execute the test runner
-  echo "Executing the test runner to install tool package."
-  TEST_MODE=true .github/packaging/common/test/entrypoint.sh -e -d "$DISTRO"
-fi
+#Build the test container and install the current version of the tool from JFrog
+# -d specifies the distro to test
+# build test runner
+echo "Building test runner ..."
+TEST_MODE=true .github/packaging/common/test/entrypoint.sh -c -d "$DISTRO"
+# Execute the test runner
+echo "Executing the test runner to install tool package."
+TEST_MODE=true .github/packaging/common/test/entrypoint.sh -e -d "$DISTRO"
