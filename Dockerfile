@@ -11,7 +11,6 @@ ENV GOROOT=/opt/golang/go/
 
 #noop for redhat enviornments
 ENV DEBIAN_FRONTEND=noninteractive
-RUN if command -v apt-get; then apt-get -y update; fi
 
 ADD . /opt/$REPO_NAME
 WORKDIR /opt/$REPO_NAME
