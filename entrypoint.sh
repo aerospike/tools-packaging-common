@@ -56,6 +56,7 @@ export IMAGE_TAG
 : "${BUILDER_IMAGE_PREFIX:=artifact.aerospike.io/database-container-dev-local/aerospike-tools/}"
 : "${ARCH:=$(uname -m)}"
 export ARCH
+export BUILDER_IMAGE_PREFIX
 
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
   BASE_COMMON_DIR="$(pwd)/.github/packaging/common/test"
