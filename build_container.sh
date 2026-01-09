@@ -17,9 +17,9 @@ function build_container() {
     -t "${fullImage}:${IMAGE_TAG}" \
     -f .github/packaging/common/Dockerfile .
   if [[ "${pushImage}" == "true" ]]; then
-    docker tag	"${fullImage}:${IMAGE_TAG}" "${fullImage}:latest"
-    docker push "${fullImage}:${IMAGE_TAG}"
-    docker push "${fullImage}:latest"
+    fj docker tag	"${fullImage}:${IMAGE_TAG}" "${fullImage}:latest"
+    jf docker push "${fullImage}:${IMAGE_TAG}"
+    jf docker push "${fullImage}:latest"
   fi	  
 }
 
