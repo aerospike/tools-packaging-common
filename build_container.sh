@@ -27,7 +27,6 @@ function execute_build_image() {
   export BUILD_DISTRO="$1"
 
   # When true, use prebuilt images from a registry; otherwise use local images
-  local use_remote="${USE_REMOTE_BUILDER_IMAGES:-false}"
   local image="${PACKAGE_NAME}-pkg-builder-${distro}-${ARCH}"
   local prefix="${BUILDER_IMAGE_PREFIX:-}"
   local fullImage="${prefix}${image}"
