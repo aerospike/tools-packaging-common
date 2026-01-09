@@ -16,8 +16,8 @@ function build_container() {
     --build-arg=REPO_NAME="$REPO_NAME" \
     -t "${fullImage}:${IMAGE_TAG}" \
     -f .github/packaging/common/Dockerfile .
+  jf docker tag "${fullImage}:${IMAGE_TAG}" "${fullImage}:latest"
   if [[ "${pushImage}" == "true" ]]; then
-    jf docker tag "${fullImage}:${IMAGE_TAG}" "${fullImage}:latest"
     jf docker push "${fullImage}:${IMAGE_TAG}"
     jf docker push "${fullImage}:latest"
   fi	  
@@ -28,33 +28,14 @@ function execute_build_image() {
 
   # When true, use prebuilt images from a registry; otherwise use local images
   local use_remote="${USE_REMOTE_BUILDER_IMAGES:-false}"
-
-  # Default local image name
-  local local_image="${PACKAGE_NAME}-pkg-builder-${BUILD_DISTRO}-${ARCH}:${IMAGE_TAG}"
-
-  # Optional remote prefix, artifact.aerospike.io/database-container-dev-local/aerospike-tools/<package_name>-pkg-builder
+  local image="${PACKAGE_NAME}-pkg-builder-${distro}-${ARCH}"
   local prefix="${BUILDER_IMAGE_PREFIX:-}"
-
-  local image
-
-  if [ "$use_remote" = "true" ]; then
-    # If no prefix is set, fall back to local naming (so nothing breaks)
-    if [ -n "$prefix" ]; then
-      image="${prefix}-${BUILD_DISTRO}-${ARCH}:${IMAGE_TAG}"
-    else
-      image="$local_image"
-    fi
-
-    echo "Using prebuilt builder image: $image"
-    docker pull "$image"
-  else
-    image="$local_image"
-  fi
+  local fullImage="${prefix}${image}"
 
   docker run \
     -e BUILD_DISTRO \
     -v "$(realpath ../dist)":/tmp/output \
-    "$image"
+    "$fullImage:latest"
 
   ls -laht ../dist
 }
