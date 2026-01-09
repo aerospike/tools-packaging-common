@@ -53,7 +53,7 @@ export IMAGE_TAG
 
 # Prefix for prebuilt builder images; override from CI
 # We'll form: ${BUILDER_IMAGE_PREFIX}-${BUILD_DITRO}-${ARCH}:${PKG_VERSION}
-: "${BUILDER_IMAGE_PREFIX:=artifact.aerospike.io/database-container-dev-local/aerospike-tools/${PACKAGE_NAME}-pkg-builder}"
+: "${BUILDER_IMAGE_PREFIX:=artifact.aerospike.io/database-container-dev-local/aerospike-tools/}"
 : "${ARCH:=$(uname -m)}"
 export ARCH
 
