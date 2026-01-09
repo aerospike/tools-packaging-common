@@ -24,7 +24,8 @@ function build_container() {
 }
 
 function execute_build_image() {
-  export BUILD_DISTRO="$1"
+  local distro=$1	
+  export BUILD_DISTRO="$distro"
 
   # When true, use prebuilt images from a registry; otherwise use local images
   local image="${PACKAGE_NAME}-pkg-builder-${distro}-${ARCH}"
