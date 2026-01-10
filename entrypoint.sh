@@ -48,14 +48,13 @@ export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
 export IMAGE_TAG
 
 # Use prebuilt builder images instead of building locally
-# e.g. ghcr.io/aerospike/asadm-pkg-builder-el8-amd64:<tag>
-: "${USE_REMOTE_BUILDER_IMAGES:=false}"
+# e.g. artifact.aerospike.io/database-container-dev-local/aerospike-tools/<tool-name>-pkg-builder-el9-x86_64
+: "${BUILD_BUILDER_IMAGES:=false}"
 
 # Prefix for prebuilt builder images; override from CI
-# We'll form: ${BUILDER_IMAGE_PREFIX}-${BUILD_DITRO}-${ARCH}:${PKG_VERSION}
-: "${BUILDER_IMAGE_PREFIX:=artifact.aerospike.io/database-container-dev-local/aerospike-tools/}"
+: "${BUILDER_IMAGE_PREFIX:-}"
 : "${ARCH:=$(uname -m)}"
-export ARCH
+export ARCH BUILD_BUILDER_IMAGES
 export BUILDER_IMAGE_PREFIX
 
 if [ "${TEST_MODE:-"false"}" = "true" ]; then
