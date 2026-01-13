@@ -14,7 +14,7 @@ function build_container() {
   local tagged="${full_image}:${IMAGE_TAG}"
   local latest="${full_image}:latest"
 
-  if [[ -z "$prefix" ]]; then
+  if [ -z "$prefix" ] || [ "$push_image" == "true" ]; then
     docker build --progress=plain \
       --build-arg "BASE_IMAGE=${distro_to_image[$distro]}" \
       --build-arg "ENV_DISTRO=$distro" \
