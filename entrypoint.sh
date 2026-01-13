@@ -13,7 +13,7 @@ declare -A distro_to_image
 distro_to_image["el8"]="redhat/ubi8:8.10"
 distro_to_image["el9"]="redhat/ubi9:9.6"
 distro_to_image["el10"]="redhat/ubi10:10.0"
-distro_to_image["amzn2023"]="amazonlinux:2022.0.20230118.3"
+distro_to_image["amzn2023"]="amazonlinux:2.0.20251208.0"
 distro_to_image["debian12"]="debian:bookworm-20230411"
 distro_to_image["debian13"]="debian:trixie-20251020"
 distro_to_image["ubuntu20.04"]="ubuntu:focal-20210723"
