@@ -49,7 +49,10 @@ function execute_build_image() {
 
   docker run --rm \
     -e BUILD_DISTRO \
+    -e REPO_NAME="$REPO_NAME" \
+    -v "$(pwd)":"/opt/${REPO_NAME}" \
     -v "${out_dir}:/tmp/output" \
+    -w "/opt/${REPO_NAME}" \
     "$latest"
 
   ls -laht "$out_dir"

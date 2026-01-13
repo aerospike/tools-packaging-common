@@ -12,8 +12,7 @@ ENV GOROOT=/opt/golang/go/
 #noop for redhat enviornments
 ENV DEBIAN_FRONTEND=noninteractive
 
-ADD . /opt/$REPO_NAME
-WORKDIR /opt/$REPO_NAME
+WORKDIR /opt/
 
 RUN source .github/packaging/common/header.sh && source .github/packaging/project/install_deps.sh && install_deps $ENV_DISTRO
 
