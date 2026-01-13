@@ -14,7 +14,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /opt/
 
-RUN source .github/packaging/common/header.sh && source .github/packaging/project/install_deps.sh && install_deps $ENV_DISTRO
+# Copy ONLY the packaging scripts needed to install deps
+COPY .github/packaging .github/packaging
+RUN source .github/packaging/common/header.sh && \
+    source .github/packaging/project/install_deps.sh && \
+    install_deps "${ENV_DISTRO}"
 
 ENTRYPOINT [".github/packaging/common/entrypoint.sh"]
 CMD ["-b"]
