@@ -45,7 +45,7 @@ PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
 IMAGE_TAG=${IMAGE_TAG:-$PKG_VERSION}
 
 export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
-export IMAGE_TAG
+export IMAGE_TAG PKG_VERSION
 
 # Use prebuilt builder images instead of building locally
 # e.g. artifact.aerospike.io/database-container-dev-local/aerospike-tools/<tool-name>-pkg-builder-el9-x86_64
