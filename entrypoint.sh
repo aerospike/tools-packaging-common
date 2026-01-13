@@ -39,8 +39,18 @@ repo_to_package["aerospike-tools-backup"]="asbackup"
 repo_to_package["aql"]="aql"
 repo_to_package["aerospike-tools"]="tools"
 
-REPO_NAME=${REPO_NAME:-"$(git config --get remote.origin.url | cut -d '/' -f 2 | cut -d '.' -f 1)"}
-REPO_NAME=${REPO_NAME:-"$(echo "$GITHUB_REPOSITORY" | cut -d '/' -f 2)"}
+# Git inside containers may refuse to operate on bind mounts ("dubious ownership")
+if command -v git >/dev/null 2>&1; then
+  git config --global --add safe.directory "$(pwd)" || true
+  # Optional: if you always mount under /opt/<repo>, allow all under /opt
+  git config --global --add safe.directory /opt/* || true
+fi
+
+REPO_NAME=${REPO_NAME:-"${GITHUB_REPOSITORY##*/}"}
+if [ -z "${REPO_NAME}" ] && command -v git >/dev/null 2>&1; then
+  REPO_NAME="$(git config --get remote.origin.url | cut -d '/' -f 2 | cut -d '.' -f 1)"
+fi
+
 PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
 IMAGE_TAG=${IMAGE_TAG:-$PKG_VERSION}
 
