@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DISTRO=${1:-"el9"}
+DISTRO=${1:-}
 # This repo is intended to be invoked on Linux with git and docker installed
 # Your working directory should be the root of the git repository
 
