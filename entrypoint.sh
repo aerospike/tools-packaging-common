@@ -14,17 +14,20 @@ distro_to_image["el8"]="redhat/ubi8:8.10"
 distro_to_image["el9"]="redhat/ubi9:9.6"
 distro_to_image["el10"]="redhat/ubi10:10.0"
 distro_to_image["amzn2023"]="amazonlinux:2023.9.20251208.0"
+distro_to_image["debian11"]="debian:bullseye-20251208"
 distro_to_image["debian12"]="debian:bookworm-20230411"
 distro_to_image["debian13"]="debian:trixie-20251020"
 distro_to_image["ubuntu20.04"]="ubuntu:focal-20210723"
 distro_to_image["ubuntu22.04"]="ubuntu:jammy-20231004"
 distro_to_image["ubuntu24.04"]="ubuntu:noble-20231126.1"
 
+# shellcheck disable=SC2034 # used when this file is sourced by other scripts (e.g. build_container.sh)
 declare -A distro_to_test_image
 distro_to_test_image["el8"]="redhat/ubi8"
 distro_to_test_image["el9"]="redhat/ubi9"
 distro_to_test_image["el10"]="redhat/ubi10"
 distro_to_test_image["amzn2023"]="amazonlinux:2023"
+distro_to_test_image["debian11"]="debian:bullseye"
 distro_to_test_image["debian12"]="debian:bookworm"
 distro_to_test_image["debian13"]="debian:trixie"
 distro_to_test_image["ubuntu20.04"]="ubuntu:20.04"
@@ -51,7 +54,7 @@ if [ -z "${REPO_NAME}" ] && command -v git >/dev/null 2>&1; then
   REPO_NAME="$(git config --get remote.origin.url | cut -d '/' -f 2 | cut -d '.' -f 1)"
 fi
 
-PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=7)}
+PKG_VERSION=${PKG_VERSION:-$(git describe --tags --always --abbrev=9)}
 IMAGE_TAG=${IMAGE_TAG:-$PKG_VERSION}
 
 export PACKAGE_NAME=${repo_to_package["$REPO_NAME"]}
