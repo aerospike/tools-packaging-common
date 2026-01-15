@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2034
 set -xeuo pipefail
 env
 
@@ -21,7 +21,6 @@ distro_to_image["ubuntu20.04"]="ubuntu:focal-20210723"
 distro_to_image["ubuntu22.04"]="ubuntu:jammy-20231004"
 distro_to_image["ubuntu24.04"]="ubuntu:noble-20231126.1"
 
-# shellcheck disable=SC2034 # used when this file is sourced by other scripts (e.g. build_container.sh)
 declare -A distro_to_test_image
 distro_to_test_image["el8"]="redhat/ubi8"
 distro_to_test_image["el9"]="redhat/ubi9"
