@@ -84,7 +84,6 @@ fi
 
 source "$BASE_COMMON_DIR/build_container.sh"
 
-INSTALL=false
 RUN_TESTS=false
 INSTALL=false
 BUILD_INTERNAL=false
@@ -119,11 +118,10 @@ if [ "$INSTALL" = false ] && [ "$BUILD_INTERNAL" = false ] && [ "$BUILD_CONTAINE
 then
     echo "Usage:
     -t ( run test cases )
-    -i ( install dependencies )
     -b ( compile and package project )
     -c ( build container -d \$DISTRO )
     -e ( execute prepared builder image and produce artifact in ../dist/\$DISTRO )
-    -d [ el8 el9 el10 amazon2023 debian12 debian13 ubuntu20.04 ubuntu22.04 ubuntu24.04 ]" 1>&2
+    -d [ el8 el9 el10 amazon2023 debian11 debian12 debian13 ubuntu20.04 ubuntu22.04 ubuntu24.04 ]" 1>&2
     exit 1
 fi
 export ENV_DISTRO
@@ -141,6 +139,8 @@ elif grep -q "platform:el10" /etc/os-release; then
   ENV_DISTRO="el10"
 elif grep -q "amazon_linux:2023" /etc/os-release; then
   ENV_DISTRO="amzn2023"
+elif grep -q "bullseye" /etc/os-release ; then
+  ENV_DISTRO="debian11"  
 elif grep -q "bookworm" /etc/os-release; then
   ENV_DISTRO="debian12"
 elif grep -q "trixie" /etc/os-release; then

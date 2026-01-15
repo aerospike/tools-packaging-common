@@ -35,5 +35,10 @@ function install_rpm_package() {
 }
 
 function install_deps () {
-  install_deps_"$1"
+  local distro="$1"
+  if ! type "install_deps_${distro}" > /dev/null 2>&1; then
+    echo "ERROR: No install_deps_${distro} function found" >&2
+    exit 1
+  fi
+  "install_deps_${distro}"
 }
