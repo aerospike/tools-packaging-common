@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-DISTRO=${1:-"el9"}
+set -xeuo pipefail
+
+DISTRO=${1:-}
 
 GIT_REPO_NAME=$(git config --get remote.origin.url | rev | cut -d '.' -f 2 | rev | cut -d '/' -f 2)
 REPO_NAME=${2:-"$GIT_REPO_NAME"}
-
+PKG_VERSION=${3:-$(git describe --tags --always --abbrev=9)}
+PACKAGE_NAME=${4:-"$REPO_NAME"}
 set -x
 # You can execute this README by replacing the following with your email and your JFrog token:
 # JF_USERNAME='ghaywood@aerospike.com' JF_TOKEN='xxxxxxxxxxxxxxxxxx' .github/packaging/common/test/README-test.sh
@@ -16,19 +19,13 @@ JF_TOKEN=${JF_TOKEN:-"You must provide your JFrog token"}
 
 #This commit should have already been pushed, so the action has built it and uploaded it to JFrog
 export PKG_VERSION
-PKG_VERSION=$(git describe --tags --always)
+export PACKAGE_NAME
 
-#Build the test container and install the current version of asconfig from JFrog
+#Build the test container and install the current version of the tool from JFrog
 # -d specifies the distro to test
+# build test runner
+echo "Building test runner ..."
 TEST_MODE=true .github/packaging/common/test/entrypoint.sh -c -d "$DISTRO"
-#...
-
-#Execute the test runner
-docker run "$REPO_NAME-pkg-tester-$DISTRO:$(git describe --tags --always)"
-
-#...
-#test_execute.bats
-# ✓ can run asconfig
-#
-#1 test, 0 failures
-
+# Execute the test runner
+echo "Executing the test runner to install tool package."
+TEST_MODE=true .github/packaging/common/test/entrypoint.sh -e -d "$DISTRO"

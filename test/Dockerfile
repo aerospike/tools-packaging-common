@@ -18,7 +18,7 @@ ENV TEST_MODE="true"
 ENV GOROOT=/opt/golang/go/
 #noop for RHEL based enviornments
 ENV DEBIAN_FRONTEND=noninteractive
-RUN if command -v apt; then apt -y update; fi
+RUN if command -v apt-get; then apt-get -y update; fi
 
 SHELL ["/bin/bash", "-euox", "pipefail", "-c"]
 ADD . /opt/$REPO_NAME
