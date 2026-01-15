@@ -168,6 +168,14 @@ EOF
   apt-get update  
 }
 
+function install_deps_debian11() {
+  # shellcheck disable=SC2086
+  apt -y install $UBUNTU_DEPS
+  install_test_framework
+  install_deb_repo
+  install_deb_package
+}
+
 function install_deps_debian12() {
   # shellcheck disable=SC2086
   apt -y install $UBUNTU_DEPS

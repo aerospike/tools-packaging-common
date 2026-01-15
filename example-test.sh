@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -xeuo pipefail
+
 DISTRO=${1:-}
 
 GIT_REPO_NAME=$(git config --get remote.origin.url | rev | cut -d '.' -f 2 | rev | cut -d '/' -f 2)
