@@ -40,8 +40,8 @@ function execute_build_image() {
   local image="${PACKAGE_NAME}-pkg-builder-${distro}-${ARCH}"
   local prefix="${BUILDER_IMAGE_PREFIX:-}"
   local full_image="${prefix}${image}"
-  local latest="${full_image}:latest"
-
+  local tagged="${full_image}:${IMAGE_TAG}"
+  
   # Ensure output dir exists and is mounted via an absolute path
   local out_dir
   out_dir="$(realpath ../dist)"
@@ -53,7 +53,7 @@ function execute_build_image() {
     -v "$(pwd)":"/opt/${REPO_NAME}" \
     -v "${out_dir}:/tmp/output" \
     -w "/opt/${REPO_NAME}" \
-    "$latest"
+    "$tagged"
 
   ls -laht "$out_dir"
 }
