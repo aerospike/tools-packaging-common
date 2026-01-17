@@ -30,8 +30,8 @@ function build_container() {
 		docker tag "$tagged" "$latest"
 	}
 
-	pull_latest() {
-		docker pull "$latest"
+	pull_image() {
+		docker pull "$tagged"
 	}
 
 	# 1) If we are explicitly building/pushing builder images, force a rebuild.
@@ -44,10 +44,10 @@ function build_container() {
 		else
 			# 3) Not local: if prefix is set, try remote pull; otherwise build.
 			if [[ -n $prefix ]]; then
-				if pull_latest; then
+				if pull_image; then
 					: # pulled successfully
 				else
-					echo "Remote image not found or pull failed: $latest. Building locally..." >&2
+					echo "Remote image not found or pull failed: $tagged. Building locally..." >&2
 					build_image
 				fi
 			else
