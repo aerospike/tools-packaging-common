@@ -113,12 +113,12 @@ done
 shift $((OPTIND - 1))
 
 if [ "$INSTALL" = false ] && [ "$BUILD_INTERNAL" = false ] && [ "$BUILD_CONTAINERS" = false ] && [ "$EXECUTE_BUILD" = false ] && [ "$RUN_TESTS" = false ]; then
-	echo 'Usage:
+	echo "Usage:
     -t ( run test cases )
     -b ( compile and package project )
-    -c ( build container -d $DISTRO )
-    -e ( execute prepared builder image and produce artifact in ../dist/$DISTRO )
-    -d [ el8 el9 el10 amzn2023 debian11 debian12 debian13 ubuntu20.04 ubuntu22.04 ubuntu24.04 ]' 1>&2
+    -c ( build container -d \$DISTRO )
+    -e ( execute prepared builder image and produce artifact in ../dist/\$DISTRO )
+    -d [ el8 el9 el10 amzn2023 debian11 debian12 debian13 ubuntu20.04 ubuntu22.04 ubuntu24.04 ]" 1>&2
 	exit 1
 fi
 export ENV_DISTRO
