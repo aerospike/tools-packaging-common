@@ -14,49 +14,17 @@ function build_container() {
 	local tagged="${full_image}:${IMAGE_TAG}"
 	local latest="${full_image}:latest"
 
-	image_exists_local() {
-		docker image inspect "$1" >/dev/null 2>&1
-	}
+	# Always build fresh - no caching
+	docker build --progress=plain --no-cache \
+		--build-arg "BASE_IMAGE=${distro_to_image[$distro]}" \
+		--build-arg "ENV_DISTRO=$distro" \
+		--build-arg "REPO_NAME=$REPO_NAME" \
+		-t "$tagged" \
+		-f .github/packaging/common/Dockerfile .
 
-	build_image() {
-		docker build --progress=plain \
-			--build-arg "BASE_IMAGE=${distro_to_image[$distro]}" \
-			--build-arg "ENV_DISTRO=$distro" \
-			--build-arg "REPO_NAME=$REPO_NAME" \
-			-t "$tagged" \
-			-f .github/packaging/common/Dockerfile .
+	docker tag "$tagged" "$latest"
 
-		# Tag "latest" in the same registry namespace (jf wrapper ok even for local)
-		docker tag "$tagged" "$latest"
-	}
-
-	pull_image() {
-		docker pull "$tagged"
-	}
-
-	# 1) If we are explicitly building/pushing builder images, force a rebuild.
-	if [[ $push_image == "true" ]]; then
-		build_image
-	else
-		# 2) If we already have the image locally, use it.
-		if image_exists_local "$tagged" || image_exists_local "$latest"; then
-			: # already available locally
-		else
-			# 3) Not local: if prefix is set, try remote pull; otherwise build.
-			if [[ -n $prefix ]]; then
-				if pull_image; then
-					: # pulled successfully
-				else
-					echo "Remote image not found or pull failed: $tagged. Building locally..." >&2
-					build_image
-				fi
-			else
-				build_image
-			fi
-		fi
-	fi
-
-	# 4) Push (only when requested and when remote prefix is configured)
+	# Push only when requested and when remote prefix is configured
 	if [[ $push_image == "true" && -n $prefix ]]; then
 		docker push "$tagged"
 		docker push "$latest"
