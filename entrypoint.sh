@@ -61,10 +61,12 @@ export IMAGE_TAG PKG_VERSION
 
 # Use prebuilt builder images instead of building locally
 # e.g. artifact.aerospike.io/database-container-dev-local/aerospike-tools/<tool-name>-pkg-builder-el9-x86_64
-: "${BUILD_BUILDER_IMAGES:=false}"
+#: "${BUILD_BUILDER_IMAGES:=false}"  # comment out to set to true
+BUILD_BUILDER_IMAGES="true"          # set to true to force rebuild runner not pulling from Jfrog
 
 # Prefix for prebuilt builder images; override from CI
-: "${BUILDER_IMAGE_PREFIX-}"
+#: "${BUILDER_IMAGE_PREFIX-}"  # comment out to set to empty
+BUILDER_IMAGE_PREFIX=""        # set to empty to stop pushing runner to Jfrog
 : "${ARCH:=$(uname -m)}"
 export ARCH BUILD_BUILDER_IMAGES
 export BUILDER_IMAGE_PREFIX
